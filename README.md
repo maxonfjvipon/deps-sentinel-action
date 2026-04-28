@@ -20,6 +20,7 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
       - uses: maxonfjvipon/deps-sentinel-action@0.0.2
         with:
           token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
