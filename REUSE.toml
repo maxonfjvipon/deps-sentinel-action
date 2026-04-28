@@ -3,7 +3,7 @@
 version = 1
 
 [[annotations]]
-path = ["README.md", "renovate.json", ".gitignore"]
+path = ["README.md", "renovate.json", ".gitignore", ".markdownlint.json"]
 precedence = "override"
 SPDX-FileCopyrightText = "Copyright (c) 2026 Max Trunnikov"
 SPDX-License-Identifier = "MIT"
