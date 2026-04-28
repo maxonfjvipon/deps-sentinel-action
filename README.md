@@ -20,7 +20,7 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
-      - uses: maxonfjvipon/deps-sentinel-action@0.0.1
+      - uses: maxonfjvipon/deps-sentinel-action@0.0.2
         with:
           token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
           owner: octocat
