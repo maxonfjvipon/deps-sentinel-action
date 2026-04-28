@@ -37,7 +37,7 @@ dependabot[bot]"
   export FAKE_GH_LOG="$tmp/gh.log"
   export INPUT_BOT_LOGINS="dependabot[bot]"
   export FAKE_PR_LIST="99"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"SUCCESS"}]'
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
   rm -rf "$tmp"
@@ -50,7 +50,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"SUCCESS"}]'
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
   rm -rf "$tmp"
@@ -63,7 +63,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"SUCCESS"}]'
   export FAKE_RULTOR="true"
   export INPUT_RULTOR="auto"
   PATH="$tmp:$PATH" run bash "$SCRIPT"
@@ -78,7 +78,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"FAILURE"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"FAILURE"}]'
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
   rm -rf "$tmp"
@@ -91,7 +91,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"FAILURE"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"FAILURE"}]'
   export FAKE_PR_COMMENTS="<!-- deps-sentinel-action: ci-failure -->"
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   rm -rf "$tmp"
@@ -104,7 +104,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"IN_PROGRESS","conclusion":null}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"IN_PROGRESS"}]'
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   rm -rf "$tmp"
   [[ "$output" == *"checks still pending"* ]]
@@ -116,7 +116,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"SUCCESS"}]'
   export INPUT_DRY_RUN="true"
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
@@ -130,7 +130,7 @@ dependabot[bot]"
   defaults
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
-  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"},{"name":"lint","state":"COMPLETED","conclusion":"FAILURE"}]'
+  export FAKE_PR_CHECKS='[{"name":"build","state":"SUCCESS"},{"name":"lint","state":"FAILURE"}]'
   export INPUT_REQUIRED_CHECKS="build"
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")

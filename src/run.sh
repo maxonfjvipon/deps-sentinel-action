@@ -28,8 +28,7 @@ any_red() {
   local checks="$1"
   local count
   count=$(echo "$checks" | jq '[.[] | select(
-    ((.state | ascii_downcase) == "completed") and
-    ((.conclusion | ascii_downcase) | IN("failure","timed_out","cancelled","action_required"))
+    (.state | ascii_downcase) | IN("failure","timed_out","cancelled","action_required","startup_failure")
   )] | length')
   [[ "$count" != "0" ]]
 }
@@ -39,7 +38,9 @@ all_green() {
   local total pending
   total=$(echo "$checks" | jq 'length')
   [[ "$total" == "0" ]] && return 1
-  pending=$(echo "$checks" | jq '[.[] | select((.state | ascii_downcase) != "completed")] | length')
+  pending=$(echo "$checks" | jq '[.[] | select(
+    (.state | ascii_downcase) | IN("pending","in_progress","queued","waiting","requested")
+  )] | length')
   [[ "$pending" == "0" ]]
 }
 
@@ -90,7 +91,7 @@ fi
 
 for pr in $prs; do
   echo "PR #${pr}: checking CI status"
-  raw=$(gh pr checks "$pr" --json name,state,conclusion 2>/dev/null || true)
+  raw=$(gh pr checks "$pr" --json name,state 2>/dev/null || echo "[]")
   checks=$(filter_checks "$raw")
   if any_red "$checks"; then
     notify_failure "$pr"
