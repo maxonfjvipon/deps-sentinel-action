@@ -14,7 +14,7 @@ Use it like this:
 name: renovate-merge
 'on':
   schedule:
-    - cron: '0 6,12,18,0 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 jobs:
   merge:
