@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 # yamllint disable rule:line-length
 ---
-name: 'renovate-sentinel-action'
-description: 'Auto-merge Renovate bot pull requests when CI is green'
+name: 'deps-sentinel-action'
+description: 'Auto-merge dependency bot pull requests when CI is green'
 branding:
   icon: git-merge
   color: green
@@ -14,10 +14,12 @@ inputs:
   owner:
     description: 'GitHub handle to @mention when CI is failing'
     required: true
-  renovate-login:
-    description: 'GitHub login of the Renovate bot'
+  bot-logins:
+    description: 'Newline-separated list of dependency bot logins to watch'
     required: false
-    default: 'renovate[bot]'
+    default: |
+      renovate[bot]
+      dependabot[bot]
   merge-method:
     description: 'Merge method when not using Rultor: merge, squash, or rebase'
     required: false
@@ -42,7 +44,7 @@ runs:
         GH_TOKEN: ${{ inputs.token }}
         GITHUB_BOT_TOKEN: ${{ github.token }}
         INPUT_OWNER: ${{ inputs.owner }}
-        INPUT_RENOVATE_LOGIN: ${{ inputs.renovate-login }}
+        INPUT_BOT_LOGINS: ${{ inputs.bot-logins }}
         INPUT_MERGE_METHOD: ${{ inputs.merge-method }}
         INPUT_RULTOR: ${{ inputs.rultor }}
         INPUT_REQUIRED_CHECKS: ${{ inputs.required-checks }}

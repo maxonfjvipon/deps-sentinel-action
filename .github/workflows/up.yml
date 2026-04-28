@@ -26,7 +26,7 @@ jobs:
           latest=$(git tag --sort=creatordate | tail -1)
           if [[ -z "$latest" ]]; then exit 0; fi
           export latest
-          sed -E -i "s/renovate-sentinel-action@[0-9.]+/renovate-sentinel-action@${latest}/g" README.md
+          sed -E -i "s/deps-sentinel-action@[0-9.]+/deps-sentinel-action@${latest}/g" README.md
       - uses: peter-evans/create-pull-request@v8
         with:
           sign-commits: true

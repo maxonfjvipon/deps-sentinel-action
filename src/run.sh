@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 set -e -o pipefail
 
-FAILURE_MARKER="<!-- renovate-sentinel-action: ci-failure -->"
+FAILURE_MARKER="<!-- deps-sentinel-action: ci-failure -->"
 
 use_rultor() {
   case "$INPUT_RULTOR" in
@@ -75,10 +75,16 @@ merge_pr() {
   fi
 }
 
-prs=$(gh pr list --author "$INPUT_RENOVATE_LOGIN" --state open --json number --jq '.[].number')
+prs=""
+while IFS= read -r login; do
+  [[ -z "$login" ]] && continue
+  result=$(gh pr list --author "$login" --state open --json number --jq '.[].number')
+  prs="$prs $result"
+done <<< "$INPUT_BOT_LOGINS"
+prs=$(echo "$prs" | xargs -n1 | sort -u)
 
 if [[ -z "$prs" ]]; then
-  echo "No open Renovate pull requests found"
+  echo "No open dependency bot pull requests found"
   exit 0
 fi
 

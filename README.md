@@ -1,13 +1,14 @@
-# Auto-Merge Renovate Bot Pull Requests
+# Auto-Merge Dependency Bot Pull Requests
 
-[![make](https://github.com/maxonfjvipon/renovate-sentinel-action/actions/workflows/make.yml/badge.svg)](https://github.com/maxonfjvipon/renovate-sentinel-action/actions/workflows/make.yml)
+[![make](https://github.com/maxonfjvipon/deps-sentinel-action/actions/workflows/make.yml/badge.svg)](https://github.com/maxonfjvipon/deps-sentinel-action/actions/workflows/make.yml)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSES/MIT.txt)
 
 This is a GitHub Action that scans open pull requests in the repository,
-finds those opened by [Renovate](https://github.com/renovatebot/renovate) bot,
-and merges them automatically when CI is green. If the build is red, it posts
-a comment tagging the repository owner — but only once per pull request, to
-avoid spam. Use it like this:
+finds those opened by [Renovate](https://github.com/renovatebot/renovate) or
+[Dependabot](https://docs.github.com/en/code-security/dependabot), and merges
+them automatically when CI is green. If the build is red, it posts a comment
+tagging the repository owner — but only once per pull request, to avoid spam.
+Use it like this:
 
 ```yaml
 name: renovate-merge
@@ -19,7 +20,7 @@ jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
-      - uses: maxonfjvipon/renovate-sentinel-action@0.0.1
+      - uses: maxonfjvipon/deps-sentinel-action@0.0.1
         with:
           token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
           owner: octocat
@@ -39,11 +40,14 @@ is merged directly via the GitHub API.
 A more fine-grained configuration is also possible:
 
 ```yaml
-- uses: maxonfjvipon/renovate-sentinel-action@0.0.1
+- uses: maxonfjvipon/deps-sentinel-action@0.0.1
   with:
     token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
     owner: octocat
-    renovate-login: renovate[bot]
+    bot-logins: |
+      renovate[bot]
+      dependabot[bot]
+      snyk-bot
     merge-method: merge
     rultor: auto
     required-checks: build,test
@@ -54,7 +58,7 @@ A more fine-grained configuration is also possible:
 | --- | --- | --- |
 | `token` | — | PAT of the repo owner (required) |
 | `owner` | — | GitHub handle to `@mention` on CI failure (required) |
-| `renovate-login` | `renovate[bot]` | Login of the Renovate bot |
+| `bot-logins` | `renovate[bot]`<br>`dependabot[bot]` | Newline-separated list of dependency bot logins to watch |
 | `merge-method` | `merge` | Merge method when not using Rultor |
 | `rultor` | `auto` | `auto` detects `.rultor.yml`, `true` forces it, `false` disables it |
 | `required-checks` | _(all)_ | Comma-separated checks that must pass; empty means all |

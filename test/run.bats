@@ -8,7 +8,8 @@ FAKE="${BATS_TEST_DIRNAME}/fake/gh"
 defaults() {
   export FAKE_RULTOR="false"
   export FAKE_PR_COMMENTS=""
-  export INPUT_RENOVATE_LOGIN="renovate[bot]"
+  export INPUT_BOT_LOGINS="renovate[bot]
+dependabot[bot]"
   export INPUT_OWNER="maxonfjvipon"
   export INPUT_MERGE_METHOD="merge"
   export INPUT_RULTOR="false"
@@ -18,7 +19,7 @@ defaults() {
   export GITHUB_BOT_TOKEN="bot-token"
 }
 
-@test "skips when there are no open renovate pull requests" {
+@test "skips when there are no open dependency bot pull requests" {
   tmp=$(mktemp -d)
   cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
   defaults
@@ -26,7 +27,21 @@ defaults() {
   export FAKE_PR_LIST=""
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   rm -rf "$tmp"
-  [[ "$output" == *"No open Renovate pull requests found"* ]]
+  [[ "$output" == *"No open dependency bot pull requests found"* ]]
+}
+
+@test "merges dependabot pull request when all checks are green" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export INPUT_BOT_LOGINS="dependabot[bot]"
+  export FAKE_PR_LIST="99"
+  export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"SUCCESS"}]'
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
+  rm -rf "$tmp"
+  [[ "$log" == *"pr merge 99"* ]]
 }
 
 @test "merges pull request when all checks are green" {
@@ -77,7 +92,7 @@ defaults() {
   export FAKE_GH_LOG="$tmp/gh.log"
   export FAKE_PR_LIST="42"
   export FAKE_PR_CHECKS='[{"name":"build","state":"COMPLETED","conclusion":"FAILURE"}]'
-  export FAKE_PR_COMMENTS="<!-- renovate-sentinel-action: ci-failure -->"
+  export FAKE_PR_COMMENTS="<!-- deps-sentinel-action: ci-failure -->"
   PATH="$tmp:$PATH" run bash "$SCRIPT"
   rm -rf "$tmp"
   [[ "$output" == *"already notified"* ]]
