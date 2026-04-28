@@ -58,7 +58,7 @@ A more fine-grained configuration is also possible:
 | --- | --- | --- |
 | `token` | — | PAT of the repo owner (required) |
 | `owner` | — | GitHub handle to `@mention` on CI failure (required) |
-| `bot-logins` | `renovate[bot]`<br>`dependabot[bot]` | Newline-separated list of dependency bot logins to watch |
+| `bot-logins` | `renovate[bot]`, `dependabot[bot]` | Newline-separated list of dependency bot logins to watch |
 | `merge-method` | `merge` | Merge method when not using Rultor |
 | `rultor` | `auto` | `auto` detects `.rultor.yml`, `true` forces it, `false` disables it |
 | `required-checks` | _(all)_ | Comma-separated checks that must pass; empty means all |
