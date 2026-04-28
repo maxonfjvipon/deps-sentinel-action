@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 Max Trunnikov
 # SPDX-License-Identifier: MIT
+# yamllint disable rule:line-length
 ---
 name: 'renovate-sentinel-action'
 description: 'Auto-merge Renovate bot pull requests when CI is green'

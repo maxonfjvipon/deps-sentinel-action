@@ -51,13 +51,13 @@ A more fine-grained configuration is also possible:
 ```
 
 | Input | Default | Description |
-|---|---|---|
+| --- | --- | --- |
 | `token` | — | PAT of the repo owner (required) |
 | `owner` | — | GitHub handle to `@mention` on CI failure (required) |
 | `renovate-login` | `renovate[bot]` | Login of the Renovate bot |
-| `merge-method` | `merge` | Merge method when not using Rultor: `merge`, `squash`, or `rebase` |
-| `rultor` | `auto` | Rultor usage: `auto` detects `.rultor.yml`, `true` forces it, `false` disables it |
-| `required-checks` | _(all)_ | Comma-separated check names that must pass; empty means all checks |
+| `merge-method` | `merge` | Merge method when not using Rultor |
+| `rultor` | `auto` | `auto` detects `.rultor.yml`, `true` forces it, `false` disables it |
+| `required-checks` | _(all)_ | Comma-separated checks that must pass; empty means all |
 | `dry-run` | `false` | Log actions without posting comments or merging |
 
 ## How to Contribute
