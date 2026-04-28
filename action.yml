@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: Copyright (c) 2026 Max Trunnikov
+# SPDX-License-Identifier: MIT
+---
+name: 'renovate-sentinel-action'
+description: 'Auto-merge Renovate bot pull requests when CI is green'
+branding:
+  icon: git-merge
+  color: green
+inputs:
+  token:
+    description: 'Personal Access Token of the repository owner'
+    required: true
+  owner:
+    description: 'GitHub handle to @mention when CI is failing'
+    required: true
+  renovate-login:
+    description: 'GitHub login of the Renovate bot'
+    required: false
+    default: 'renovate[bot]'
+  merge-method:
+    description: 'Merge method when not using Rultor: merge, squash, or rebase'
+    required: false
+    default: 'merge'
+  rultor:
+    description: 'Rultor usage: auto detects .rultor.yml, true forces it, false disables it'
+    required: false
+    default: 'auto'
+  required-checks:
+    description: 'Comma-separated check names that must pass; empty means all checks'
+    required: false
+    default: ''
+  dry-run:
+    description: 'Log actions without posting comments or merging'
+    required: false
+    default: 'false'
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        GITHUB_BOT_TOKEN: ${{ github.token }}
+        INPUT_OWNER: ${{ inputs.owner }}
+        INPUT_RENOVATE_LOGIN: ${{ inputs.renovate-login }}
+        INPUT_MERGE_METHOD: ${{ inputs.merge-method }}
+        INPUT_RULTOR: ${{ inputs.rultor }}
+        INPUT_REQUIRED_CHECKS: ${{ inputs.required-checks }}
+        INPUT_DRY_RUN: ${{ inputs.dry-run }}
+      run: bash "${{ github.action_path }}/src/run.sh"

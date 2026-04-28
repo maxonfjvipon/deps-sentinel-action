@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: Copyright (c) 2026 Max Trunnikov
+# SPDX-License-Identifier: MIT
+set -e -o pipefail
+
+echo "$*" >> "${FAKE_GH_LOG:?}"
+
+case "$1" in
+  "pr")
+    case "$2" in
+      "list")
+        echo "${FAKE_PR_LIST:-}"
+        ;;
+      "checks")
+        var="FAKE_PR_CHECKS_$3"
+        echo "${!var:-${FAKE_PR_CHECKS:-[]}}"
+        ;;
+      "view")
+        var="FAKE_PR_COMMENTS_$3"
+        echo "${!var:-${FAKE_PR_COMMENTS:-}}"
+        ;;
+      "comment"|"merge")
+        ;;
+      *)
+        echo "Unknown pr subcommand: $2" >&2
+        exit 1
+        ;;
+    esac
+    ;;
+  "api")
+    [[ "${FAKE_RULTOR:-false}" == "true" ]] || exit 1
+    ;;
+  *)
+    echo "Unknown gh command: $1" >&2
+    exit 1
+    ;;
+esac
