@@ -4,8 +4,10 @@
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSES/MIT.txt)
 
 This is a GitHub Action that scans open pull requests in the repository,
-finds those opened by [Renovate](https://github.com/renovatebot/renovate) or
-[Dependabot](https://docs.github.com/en/code-security/dependabot), and merges
+finds those opened by dependency bots — by default
+[Renovate](https://github.com/renovatebot/renovate) and
+[Dependabot](https://docs.github.com/en/code-security/dependabot),
+but any bot login is configurable via `bot-logins` — and merges
 them automatically when CI is green. If the build is red, it posts a comment
 tagging the repository owner — but only once per pull request, to avoid spam.
 Use it like this:
