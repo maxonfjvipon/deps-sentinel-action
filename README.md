@@ -17,7 +17,6 @@ name: renovate-merge
 'on':
   schedule:
     - cron: '0 * * * *'
-  workflow_dispatch:
 jobs:
   merge:
     runs-on: ubuntu-latest
