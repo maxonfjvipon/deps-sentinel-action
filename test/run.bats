@@ -124,6 +124,33 @@ dependabot[bot]"
   [[ "$log" != *"pr merge"* ]]
 }
 
+@test "merges when no checks reported and mergeable state is clean" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export FAKE_PR_LIST="42"
+  export FAKE_PR_CHECKS='[]'
+  export FAKE_MERGEABLE_STATE="clean"
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
+  rm -rf "$tmp"
+  [[ "$log" == *"pr merge 42"* ]]
+}
+
+@test "skips when no checks reported and mergeable state is not clean" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export FAKE_PR_LIST="42"
+  export FAKE_PR_CHECKS='[]'
+  export FAKE_MERGEABLE_STATE="blocked"
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  rm -rf "$tmp"
+  [[ "$output" == *"skipping"* ]]
+}
+
 @test "only considers required checks when required checks are specified" {
   tmp=$(mktemp -d)
   cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
