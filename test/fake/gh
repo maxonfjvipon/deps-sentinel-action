@@ -28,7 +28,11 @@ case "$1" in
     esac
     ;;
   "api")
-    [[ "${FAKE_RULTOR:-false}" == "true" ]] || exit 1
+    if [[ "$2" == *"/pulls/"* ]]; then
+      echo "${FAKE_MERGEABLE_STATE:-clean}"
+    else
+      [[ "${FAKE_RULTOR:-false}" == "true" ]] || exit 1
+    fi
     ;;
   *)
     echo "Unknown gh command: $1" >&2

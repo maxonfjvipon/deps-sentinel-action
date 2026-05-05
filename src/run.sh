@@ -97,6 +97,14 @@ for pr in $prs; do
     notify_failure "$pr"
   elif all_green "$checks"; then
     merge_pr "$pr"
+  elif [[ "$(echo "$checks" | jq 'length')" == "0" ]]; then
+    mergeable_state=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" --jq '.mergeable_state')
+    if [[ "$mergeable_state" == "clean" ]]; then
+      echo "PR #${pr}: no checks reported, mergeable_state is clean"
+      merge_pr "$pr"
+    else
+      echo "PR #${pr}: no checks reported, mergeable_state is ${mergeable_state}, skipping"
+    fi
   else
     echo "PR #${pr}: checks still pending, skipping"
   fi
