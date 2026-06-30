@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: maxonfjvipon/deps-sentinel-action@0.0.3
+      - uses: maxonfjvipon/deps-sentinel-action@0.0.4
         with:
           token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
           owner: octocat
@@ -48,7 +48,7 @@ permitted to approve them.
 A more fine-grained configuration is also possible:
 
 ```yaml
-- uses: maxonfjvipon/deps-sentinel-action@0.0.3
+- uses: maxonfjvipon/deps-sentinel-action@0.0.4
   with:
     token: ${{ secrets.RENOVATE_MERGE_TOKEN }}
     owner: octocat
