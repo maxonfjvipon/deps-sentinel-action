@@ -39,6 +39,12 @@ If the repository has a `.rultor.yml` file, the merge is initiated by posting
 a `@rultor merge` comment as the repository owner. Otherwise, the pull request
 is merged directly via the GitHub API.
 
+When a bot pull request has workflow runs awaiting manual approval — as happens
+when GitHub gates runs triggered by the default `GITHUB_TOKEN` — the action
+approves those runs, scoped to the pull request's head commit, so that CI can
+start. The `token` actor differs from the bot that triggered the runs, so it is
+permitted to approve them.
+
 A more fine-grained configuration is also possible:
 
 ```yaml

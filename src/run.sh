@@ -63,6 +63,21 @@ notify_failure() {
 ${FAILURE_MARKER}"
 }
 
+approve_pending() {
+  local pr="$1" sha runs id
+  sha=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" --jq '.head.sha')
+  runs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs?head_sha=${sha}&status=action_required" \
+    --jq '.workflow_runs[].id')
+  [[ -z "$runs" ]] && return 1
+  while IFS= read -r id; do
+    [[ -z "$id" ]] && continue
+    echo "PR #${pr}: approving workflow run ${id}"
+    [[ "$INPUT_DRY_RUN" == "true" ]] && continue
+    gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/runs/${id}/approve"
+  done <<< "$runs"
+  return 0
+}
+
 merge_pr() {
   local pr="$1"
   if use_rultor; then
@@ -91,6 +106,10 @@ fi
 
 for pr in $prs; do
   echo "PR #${pr}: checking CI status"
+  if approve_pending "$pr"; then
+    echo "PR #${pr}: approved workflow runs awaiting approval"
+    continue
+  fi
   raw=$(gh pr checks "$pr" --json name,state 2>/dev/null || echo "[]")
   checks=$(filter_checks "$raw")
   if any_red "$checks"; then

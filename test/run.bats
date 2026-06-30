@@ -164,3 +164,47 @@ dependabot[bot]"
   rm -rf "$tmp"
   [[ "$log" == *"pr merge 42"* ]]
 }
+
+@test "approves workflow runs that await approval" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export FAKE_PR_LIST="42"
+  export FAKE_PR_CHECKS='[]'
+  export FAKE_PENDING_RUNS="111
+222"
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
+  rm -rf "$tmp"
+  [[ "$log" == *"actions/runs/111/approve"* ]]
+}
+
+@test "does not merge while workflow runs await approval" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export FAKE_PR_LIST="42"
+  export FAKE_PR_CHECKS='[]'
+  export FAKE_PENDING_RUNS="111"
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
+  rm -rf "$tmp"
+  [[ "$log" != *"pr merge"* ]]
+}
+
+@test "does not approve workflow runs in dry run mode" {
+  tmp=$(mktemp -d)
+  cp "$FAKE" "$tmp/gh" && chmod +x "$tmp/gh"
+  defaults
+  export FAKE_GH_LOG="$tmp/gh.log"
+  export FAKE_PR_LIST="42"
+  export FAKE_PR_CHECKS='[]'
+  export FAKE_PENDING_RUNS="111"
+  export INPUT_DRY_RUN="true"
+  PATH="$tmp:$PATH" run bash "$SCRIPT"
+  log=$(cat "$tmp/gh.log" 2>/dev/null || echo "")
+  rm -rf "$tmp"
+  [[ "$log" != *"approve"* ]]
+}
