@@ -28,8 +28,16 @@ case "$1" in
     esac
     ;;
   "api")
-    if [[ "$2" == *"/pulls/"* ]]; then
-      echo "${FAKE_MERGEABLE_STATE:-clean}"
+    if [[ "$*" == *"/actions/runs/"*"/approve"* ]]; then
+      :
+    elif [[ "$*" == *"/actions/runs"* ]]; then
+      echo "${FAKE_PENDING_RUNS:-}"
+    elif [[ "$*" == *"/pulls/"* ]]; then
+      if [[ "$*" == *".head.sha"* ]]; then
+        echo "${FAKE_HEAD_SHA:-deadbeef}"
+      else
+        echo "${FAKE_MERGEABLE_STATE:-clean}"
+      fi
     else
       [[ "${FAKE_RULTOR:-false}" == "true" ]] || exit 1
     fi
